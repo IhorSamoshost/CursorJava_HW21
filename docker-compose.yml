@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  app:
+    image: 'my-app-image:latest'
+    build:
+      context: src/main/java/dockered_app/
+    container_name: docked-app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/book_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQL95Dialect
+    ports:
+      - 8080:8080
+
+  db:
+    image: 'my-postgres-image:latest'
+    build:
+      context: src/main/dockered_db/
+    container_name: docked-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 8081:5432
